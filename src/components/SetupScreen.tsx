@@ -61,12 +61,13 @@ export default function SetupScreen({ onComplete }: SetupScreenProps) {
               />
               <p className="text-xs text-muted-foreground">Chapters, pages, problems — whatever makes sense.</p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="start">Start date</Label>
                 <Input
                   id="start"
                   type="date"
+                  className="w-full min-w-0 text-sm"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
@@ -76,6 +77,7 @@ export default function SetupScreen({ onComplete }: SetupScreenProps) {
                 <Input
                   id="deadline"
                   type="date"
+                  className="w-full min-w-0 text-sm"
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
                 />

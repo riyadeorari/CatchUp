@@ -29,12 +29,15 @@ const Index = () => {
   const handleUnitsCompleted = (units: number) => {
     if (!plan) return;
     const today = new Date().toISOString().split("T")[0];
+    const todayTarget = getTodayTarget(plan);
+    const existingLog = plan.dailyLog.find((l) => l.date === today);
+    const previouslyCompleted = existingLog ? existingLog.completed : 0;
     const updated: PlanData = {
       ...plan,
       completedUnits: Math.min(plan.totalUnits, plan.completedUnits + units),
       dailyLog: [
         ...plan.dailyLog.filter((l) => l.date !== today),
-        { date: today, completed: units, target: 0 },
+        { date: today, completed: previouslyCompleted + units, target: todayTarget },
       ],
     };
     setPlan(updated);
