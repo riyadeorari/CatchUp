@@ -4,7 +4,7 @@ import Dashboard from "@/components/Dashboard";
 import FocusSession from "@/components/FocusSession";
 import OverwhelmMode from "@/components/OverwhelmMode";
 import type { PlanData } from "@/lib/planner";
-import { savePlan, loadPlan, clearPlan } from "@/lib/planner";
+import { savePlan, loadPlan, clearPlan, getTodayTarget } from "@/lib/planner";
 
 type Screen = "setup" | "dashboard" | "focus" | "overwhelm";
 
