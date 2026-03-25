@@ -1,16 +1,85 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from "react";
+import SetupScreen from "@/components/SetupScreen";
+import Dashboard from "@/components/Dashboard";
+import FocusSession from "@/components/FocusSession";
+import OverwhelmMode from "@/components/OverwhelmMode";
+import type { PlanData } from "@/lib/planner";
+import { savePlan, loadPlan, clearPlan } from "@/lib/planner";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+type Screen = "setup" | "dashboard" | "focus" | "overwhelm";
+
+const Index = () => {
+  const [plan, setPlan] = useState<PlanData | null>(null);
+  const [screen, setScreen] = useState<Screen>("setup");
+
+  useEffect(() => {
+    const saved = loadPlan();
+    if (saved) {
+      setPlan(saved);
+      setScreen("dashboard");
+    }
+  }, []);
+
+  const handleSetupComplete = (newPlan: PlanData) => {
+    setPlan(newPlan);
+    savePlan(newPlan);
+    setScreen("dashboard");
+  };
+
+  const handleUnitsCompleted = (units: number) => {
+    if (!plan) return;
+    const today = new Date().toISOString().split("T")[0];
+    const updated: PlanData = {
+      ...plan,
+      completedUnits: Math.min(plan.totalUnits, plan.completedUnits + units),
+      dailyLog: [
+        ...plan.dailyLog.filter((l) => l.date !== today),
+        { date: today, completed: units, target: 0 },
+      ],
+    };
+    setPlan(updated);
+    savePlan(updated);
+    setScreen("dashboard");
+  };
+
+  const handleReset = () => {
+    clearPlan();
+    setPlan(null);
+    setScreen("setup");
+  };
+
+  if (!plan || screen === "setup") {
+    return <SetupScreen onComplete={handleSetupComplete} />;
+  }
+
+  if (screen === "focus") {
+    return (
+      <FocusSession
+        plan={plan}
+        onComplete={handleUnitsCompleted}
+        onCancel={() => setScreen("dashboard")}
+      />
+    );
+  }
+
+  if (screen === "overwhelm") {
+    return (
+      <OverwhelmMode
+        plan={plan}
+        onComplete={handleUnitsCompleted}
+        onBack={() => setScreen("dashboard")}
+      />
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
+    <Dashboard
+      plan={plan}
+      onStartFocus={() => setScreen("focus")}
+      onOverwhelm={() => setScreen("overwhelm")}
+      onReset={handleReset}
+    />
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
