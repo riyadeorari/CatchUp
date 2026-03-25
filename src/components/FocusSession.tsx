@@ -94,10 +94,10 @@ export default function FocusSession({ plan, onComplete, onCancel }: FocusSessio
             <p className="text-sm text-center text-muted-foreground">How did it go?</p>
             <div className="grid grid-cols-3 gap-2">
               <Button onClick={() => onComplete(todayTarget)} size="sm">
-                Completed
+                Completed ({todayTarget})
               </Button>
               <Button onClick={() => onComplete(Math.max(1, Math.floor(todayTarget / 2)))} variant="secondary" size="sm">
-                Partial
+                Partial ({Math.max(1, Math.floor(todayTarget / 2))})
               </Button>
               <Button onClick={() => onComplete(0)} variant="outline" size="sm">
                 Skipped
