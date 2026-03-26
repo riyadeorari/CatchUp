@@ -44,7 +44,7 @@ export default function OverwhelmMode({ onStartFocus, onBack }: OverwhelmModePro
 
           <div className="space-y-2">
             <Button onClick={onStartFocus} className="w-full">
-              Start a focus session
+              Go to focus session
             </Button>
             <Button onClick={onBack} variant="secondary" className="w-full">
               Return to my plan

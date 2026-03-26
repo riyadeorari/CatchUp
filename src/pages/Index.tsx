@@ -36,6 +36,10 @@ const Index = () => {
 
   const handleUnitsCompleted = (units: number) => {
     if (!activePlan) return;
+    if (screen !== "focus" || units <= 0) {
+      setScreen("dashboard");
+      return;
+    }
     const today = new Date().toISOString().split("T")[0];
     const todayTarget = getTodayTarget(activePlan);
     const existingLog = activePlan.dailyLog.find((l) => l.date === today);
