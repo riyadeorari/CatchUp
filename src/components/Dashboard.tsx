@@ -3,16 +3,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { PlanData } from "@/lib/planner";
 import { getDaysLeft, getRemainingUnits, getTodayTarget } from "@/lib/planner";
-import { Clock, Target, Layers, CalendarDays } from "lucide-react";
+import { Clock, Target, Layers, CalendarDays, ArrowLeft } from "lucide-react";
 
 interface DashboardProps {
   plan: PlanData;
   onStartFocus: () => void;
   onOverwhelm: () => void;
   onReset: () => void;
+  onBack: () => void;
 }
 
-export default function Dashboard({ plan, onStartFocus, onOverwhelm, onReset }: DashboardProps) {
+export default function Dashboard({ plan, onStartFocus, onOverwhelm, onReset, onBack }: DashboardProps) {
   const remaining = getRemainingUnits(plan);
   const daysLeft = getDaysLeft(plan.deadline);
   const todayTarget = getTodayTarget(plan);
@@ -22,6 +23,15 @@ export default function Dashboard({ plan, onStartFocus, onOverwhelm, onReset }: 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
       <div className="w-full max-w-md space-y-6">
+        {/* Back button */}
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          All plans
+        </button>
+
         {/* Header */}
         <div className="text-center space-y-1">
           <h1 className="text-2xl font-semibold tracking-tight">{plan.goalName}</h1>
@@ -62,7 +72,7 @@ export default function Dashboard({ plan, onStartFocus, onOverwhelm, onReset }: 
           onClick={onReset}
           className="block mx-auto text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
         >
-          Start over with a new plan
+          Delete this plan
         </button>
       </div>
     </div>
