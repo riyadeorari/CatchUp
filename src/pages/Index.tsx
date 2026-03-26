@@ -107,8 +107,7 @@ const Index = () => {
   if (screen === "overwhelm" && activePlan) {
     return (
       <OverwhelmMode
-        plan={activePlan}
-        onComplete={handleUnitsCompleted}
+        onStartFocus={() => setScreen("focus")}
         onBack={() => setScreen("dashboard")}
       />
     );

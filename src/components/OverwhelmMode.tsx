@@ -1,43 +1,53 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { PlanData } from "@/lib/planner";
-import { getSmallestStep } from "@/lib/planner";
 
 interface OverwhelmModeProps {
-  plan: PlanData;
-  onComplete: (units: number) => void;
+  onStartFocus: () => void;
   onBack: () => void;
 }
 
-export default function OverwhelmMode({ plan, onComplete, onBack }: OverwhelmModeProps) {
-  const smallStep = getSmallestStep(plan);
+const suggestions = [
+  { emoji: "📖", text: "Read just 1 chapter" },
+  { emoji: "⏱️", text: "Study for 10 minutes" },
+  { emoji: "📝", text: "Open your notes and begin" },
+  { emoji: "🎯", text: "Focus only on the next small step" },
+];
 
+export default function OverwhelmMode({ onStartFocus, onBack }: OverwhelmModeProps) {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <Card className="w-full max-w-sm border-border/50 shadow-lg text-center">
         <CardHeader className="pb-2 space-y-2">
           <div className="text-3xl">🫂</div>
-          <CardTitle className="text-xl font-semibold">It's okay. Let's go small.</CardTitle>
+          <CardTitle className="text-xl font-semibold">It's okay. Take a breath.</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
           <p className="text-muted-foreground text-sm leading-relaxed">
-            You don't have to do everything today. Just try this:
+            You don't need to finish everything right now. Just begin with one small step.
           </p>
-          <div className="rounded-lg bg-secondary p-5">
-            <p className="text-3xl font-semibold">{smallStep}</p>
-            <p className="text-sm text-secondary-foreground mt-1">
-              unit{smallStep !== 1 ? "s" : ""} — that's all
-            </p>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Any progress counts. The rest will be spread across your remaining days.
-          </p>
+
           <div className="space-y-2">
-            <Button onClick={() => onComplete(smallStep)} className="w-full">
-              I did it ✓
+            {suggestions.map((s) => (
+              <div
+                key={s.text}
+                className="rounded-lg bg-secondary px-4 py-3 flex items-center gap-3 text-left"
+              >
+                <span className="text-lg">{s.emoji}</span>
+                <span className="text-sm text-secondary-foreground">{s.text}</span>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            Pick any one thing above. That's enough for now.
+          </p>
+
+          <div className="space-y-2">
+            <Button onClick={onStartFocus} className="w-full">
+              Start a focus session
             </Button>
             <Button onClick={onBack} variant="secondary" className="w-full">
-              Go back
+              Return to my plan
             </Button>
           </div>
         </CardContent>
