@@ -1,88 +1,132 @@
 import { useState, useEffect } from "react";
+import LandingPage from "@/components/LandingPage";
+import PlansListDashboard from "@/components/PlansListDashboard";
 import SetupScreen from "@/components/SetupScreen";
 import Dashboard from "@/components/Dashboard";
 import FocusSession from "@/components/FocusSession";
 import OverwhelmMode from "@/components/OverwhelmMode";
 import type { PlanData } from "@/lib/planner";
-import { savePlan, loadPlan, clearPlan, getTodayTarget } from "@/lib/planner";
+import { savePlan, loadAllPlans, deletePlan, getTodayTarget, migrateOldPlan } from "@/lib/planner";
 
-type Screen = "setup" | "dashboard" | "focus" | "overwhelm";
+type Screen = "landing" | "plans" | "setup" | "dashboard" | "focus" | "overwhelm";
 
 const Index = () => {
-  const [plan, setPlan] = useState<PlanData | null>(null);
-  const [screen, setScreen] = useState<Screen>("setup");
+  const [plans, setPlans] = useState<PlanData[]>([]);
+  const [activePlanId, setActivePlanId] = useState<string | null>(null);
+  const [screen, setScreen] = useState<Screen>("landing");
 
   useEffect(() => {
-    const saved = loadPlan();
-    if (saved) {
-      setPlan(saved);
-      setScreen("dashboard");
+    migrateOldPlan();
+    const saved = loadAllPlans();
+    setPlans(saved);
+    if (saved.length > 0) {
+      setScreen("plans");
     }
   }, []);
 
+  const activePlan = plans.find((p) => p.id === activePlanId) || null;
+
   const handleSetupComplete = (newPlan: PlanData) => {
-    setPlan(newPlan);
     savePlan(newPlan);
+    const updated = loadAllPlans();
+    setPlans(updated);
+    setActivePlanId(newPlan.id);
     setScreen("dashboard");
   };
 
   const handleUnitsCompleted = (units: number) => {
-    if (!plan) return;
+    if (!activePlan) return;
     const today = new Date().toISOString().split("T")[0];
-    const todayTarget = getTodayTarget(plan);
-    const existingLog = plan.dailyLog.find((l) => l.date === today);
+    const todayTarget = getTodayTarget(activePlan);
+    const existingLog = activePlan.dailyLog.find((l) => l.date === today);
     const previouslyCompleted = existingLog ? existingLog.completed : 0;
     const updated: PlanData = {
-      ...plan,
-      completedUnits: Math.min(plan.totalUnits, plan.completedUnits + units),
+      ...activePlan,
+      completedUnits: Math.min(activePlan.totalUnits, activePlan.completedUnits + units),
       dailyLog: [
-        ...plan.dailyLog.filter((l) => l.date !== today),
+        ...activePlan.dailyLog.filter((l) => l.date !== today),
         { date: today, completed: previouslyCompleted + units, target: todayTarget },
       ],
     };
-    setPlan(updated);
     savePlan(updated);
+    setPlans(loadAllPlans());
     setScreen("dashboard");
   };
 
-  const handleReset = () => {
-    clearPlan();
-    setPlan(null);
-    setScreen("setup");
+  const handleDeletePlan = () => {
+    if (!activePlanId) return;
+    deletePlan(activePlanId);
+    const updated = loadAllPlans();
+    setPlans(updated);
+    setActivePlanId(null);
+    setScreen(updated.length > 0 ? "plans" : "landing");
   };
 
-  if (!plan || screen === "setup") {
-    return <SetupScreen onComplete={handleSetupComplete} />;
+  const openPlan = (id: string) => {
+    setActivePlanId(id);
+    setScreen("dashboard");
+  };
+
+  if (screen === "landing") {
+    return (
+      <LandingPage
+        onGetStarted={() => setScreen(plans.length > 0 ? "plans" : "setup")}
+      />
+    );
   }
 
-  if (screen === "focus") {
+  if (screen === "plans") {
+    return (
+      <PlansListDashboard
+        plans={plans}
+        onCreateNew={() => setScreen("setup")}
+        onOpenPlan={openPlan}
+      />
+    );
+  }
+
+  if (screen === "setup") {
+    return (
+      <SetupScreen
+        onComplete={handleSetupComplete}
+        onBack={() => setScreen(plans.length > 0 ? "plans" : "landing")}
+      />
+    );
+  }
+
+  if (screen === "focus" && activePlan) {
     return (
       <FocusSession
-        plan={plan}
+        plan={activePlan}
         onComplete={handleUnitsCompleted}
         onCancel={() => setScreen("dashboard")}
       />
     );
   }
 
-  if (screen === "overwhelm") {
+  if (screen === "overwhelm" && activePlan) {
     return (
       <OverwhelmMode
-        plan={plan}
+        plan={activePlan}
         onComplete={handleUnitsCompleted}
         onBack={() => setScreen("dashboard")}
       />
     );
   }
 
-  return (
-    <Dashboard
-      plan={plan}
-      onStartFocus={() => setScreen("focus")}
-      onOverwhelm={() => setScreen("overwhelm")}
-      onReset={handleReset}
-    />
-  );
+  if (activePlan) {
+    return (
+      <Dashboard
+        plan={activePlan}
+        onStartFocus={() => setScreen("focus")}
+        onOverwhelm={() => setScreen("overwhelm")}
+        onReset={handleDeletePlan}
+        onBack={() => setScreen("plans")}
+      />
+    );
+  }
+
+  return <LandingPage onGetStarted={() => setScreen("setup")} />;
 };
 
 export default Index;

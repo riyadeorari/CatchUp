@@ -4,12 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PlanData } from "@/lib/planner";
+import { generateId } from "@/lib/planner";
+import { ArrowLeft } from "lucide-react";
 
 interface SetupScreenProps {
   onComplete: (plan: PlanData) => void;
+  onBack: () => void;
 }
 
-export default function SetupScreen({ onComplete }: SetupScreenProps) {
+export default function SetupScreen({ onComplete, onBack }: SetupScreenProps) {
   const [goalName, setGoalName] = useState("");
   const [totalUnits, setTotalUnits] = useState("");
   const [startDate, setStartDate] = useState(() => new Date().toISOString().split("T")[0]);
@@ -21,6 +24,7 @@ export default function SetupScreen({ onComplete }: SetupScreenProps) {
     e.preventDefault();
     if (!isValid) return;
     onComplete({
+      id: generateId(),
       goalName: goalName.trim(),
       totalUnits: Number(totalUnits),
       completedUnits: 0,
@@ -34,8 +38,14 @@ export default function SetupScreen({ onComplete }: SetupScreenProps) {
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <Card className="w-full max-w-md border-border/50 shadow-lg">
         <CardHeader className="text-center space-y-2 pb-2">
+          <button
+            onClick={onBack}
+            className="absolute left-6 top-6 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
           <div className="text-3xl">🌱</div>
-          <CardTitle className="text-2xl font-semibold tracking-tight">Plan Your Work</CardTitle>
+          <CardTitle className="text-2xl font-semibold tracking-tight">Create New Plan</CardTitle>
           <p className="text-muted-foreground text-sm">Break it down. One step at a time.</p>
         </CardHeader>
         <CardContent>
@@ -84,7 +94,7 @@ export default function SetupScreen({ onComplete }: SetupScreenProps) {
               </div>
             </div>
             <Button type="submit" className="w-full" size="lg" disabled={!isValid}>
-              Start Planning
+              Create Plan
             </Button>
           </form>
         </CardContent>
