@@ -93,8 +93,9 @@ export default function SetupScreen({ onComplete, onBack }: SetupScreenProps) {
               Create Plan
             </Button>
           </form>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
