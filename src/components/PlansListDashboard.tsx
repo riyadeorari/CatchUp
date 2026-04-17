@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import BackButton from "@/components/BackButton";
 import type { PlanData } from "@/lib/planner";
 import { getDaysLeft, getRemainingUnits, getTodayTarget } from "@/lib/planner";
 import { Plus, ArrowRight, CalendarDays, Target } from "lucide-react";
@@ -9,12 +10,14 @@ interface PlansListDashboardProps {
   plans: PlanData[];
   onCreateNew: () => void;
   onOpenPlan: (id: string) => void;
+  onBack: () => void;
 }
 
-export default function PlansListDashboard({ plans, onCreateNew, onOpenPlan }: PlansListDashboardProps) {
+export default function PlansListDashboard({ plans, onCreateNew, onOpenPlan, onBack }: PlansListDashboardProps) {
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6">
-      <div className="w-full max-w-2xl mx-auto space-y-6">
+      <div className="w-full max-w-2xl mx-auto space-y-4">
+        <BackButton onClick={onBack} label="Back" />
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>

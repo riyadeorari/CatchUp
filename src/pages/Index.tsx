@@ -84,6 +84,7 @@ const Index = () => {
         plans={plans}
         onCreateNew={() => setScreen("setup")}
         onOpenPlan={openPlan}
+        onBack={() => setScreen("landing")}
       />
     );
   }
