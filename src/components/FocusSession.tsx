@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import BackButton from "@/components/BackButton";
 import type { PlanData } from "@/lib/planner";
 import { getTodayTarget } from "@/lib/planner";
 
@@ -78,12 +79,14 @@ export default function FocusSession({ plan, onComplete, onCancel }: FocusSessio
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <Card className="w-full max-w-sm border-border/50 shadow-lg">
-        <CardHeader className="text-center pb-2">
-          <CardTitle className="text-xl font-semibold">Focus Session</CardTitle>
-          <p className="text-muted-foreground text-sm">{plan.goalName}</p>
-        </CardHeader>
-        <CardContent className="space-y-5">
+      <div className="w-full max-w-sm space-y-4">
+        <BackButton onClick={onCancel} label="Back to dashboard" />
+        <Card className="border-border/50 shadow-lg">
+          <CardHeader className="text-center pb-2">
+            <CardTitle className="text-xl font-semibold">Focus Session</CardTitle>
+            <p className="text-muted-foreground text-sm">{plan.goalName}</p>
+          </CardHeader>
+          <CardContent className="space-y-5">
           {/* Progress summary */}
           <div className="grid grid-cols-2 gap-3 text-center text-sm">
             <div className="bg-muted/50 rounded-lg p-2.5">
@@ -161,20 +164,15 @@ export default function FocusSession({ plan, onComplete, onCancel }: FocusSessio
             </div>
           )}
 
-          {/* Done / Back */}
-          <div className="flex flex-col items-center gap-2 pt-1">
-            <Button variant="secondary" size="sm" className="w-full" onClick={handleDone}>
-              Finish &amp; save progress
-            </Button>
-            <button
-              onClick={onCancel}
-              className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
-            >
-              Back to dashboard
-            </button>
-          </div>
-        </CardContent>
-      </Card>
+            {/* Done */}
+            <div className="flex flex-col items-center gap-2 pt-1">
+              <Button variant="secondary" size="sm" className="w-full" onClick={handleDone}>
+                Finish &amp; save progress
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
