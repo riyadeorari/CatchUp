@@ -164,20 +164,15 @@ export default function FocusSession({ plan, onComplete, onCancel }: FocusSessio
             </div>
           )}
 
-          {/* Done / Back */}
-          <div className="flex flex-col items-center gap-2 pt-1">
-            <Button variant="secondary" size="sm" className="w-full" onClick={handleDone}>
-              Finish &amp; save progress
-            </Button>
-            <button
-              onClick={onCancel}
-              className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
-            >
-              Back to dashboard
-            </button>
-          </div>
-        </CardContent>
-      </Card>
+            {/* Done */}
+            <div className="flex flex-col items-center gap-2 pt-1">
+              <Button variant="secondary" size="sm" className="w-full" onClick={handleDone}>
+                Finish &amp; save progress
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
