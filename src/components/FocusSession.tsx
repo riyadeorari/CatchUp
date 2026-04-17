@@ -79,12 +79,14 @@ export default function FocusSession({ plan, onComplete, onCancel }: FocusSessio
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <Card className="w-full max-w-sm border-border/50 shadow-lg">
-        <CardHeader className="text-center pb-2">
-          <CardTitle className="text-xl font-semibold">Focus Session</CardTitle>
-          <p className="text-muted-foreground text-sm">{plan.goalName}</p>
-        </CardHeader>
-        <CardContent className="space-y-5">
+      <div className="w-full max-w-sm space-y-4">
+        <BackButton onClick={onCancel} label="Back to dashboard" />
+        <Card className="border-border/50 shadow-lg">
+          <CardHeader className="text-center pb-2">
+            <CardTitle className="text-xl font-semibold">Focus Session</CardTitle>
+            <p className="text-muted-foreground text-sm">{plan.goalName}</p>
+          </CardHeader>
+          <CardContent className="space-y-5">
           {/* Progress summary */}
           <div className="grid grid-cols-2 gap-3 text-center text-sm">
             <div className="bg-muted/50 rounded-lg p-2.5">
