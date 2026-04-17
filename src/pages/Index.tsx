@@ -19,9 +19,8 @@ const Index = () => {
     migrateOldPlan();
     const saved = loadAllPlans();
     setPlans(saved);
-    if (saved.length > 0) {
-      setScreen("plans");
-    }
+    // Always start on the landing page for a fresh visit.
+    // Do not restore the last visited screen.
   }, []);
 
   const activePlan = plans.find((p) => p.id === activePlanId) || null;
