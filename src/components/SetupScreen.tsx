@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PlanData } from "@/lib/planner";
 import { generateId } from "@/lib/planner";
-import { ArrowLeft } from "lucide-react";
+import BackButton from "@/components/BackButton";
 
 interface SetupScreenProps {
   onComplete: (plan: PlanData) => void;
@@ -36,19 +36,15 @@ export default function SetupScreen({ onComplete, onBack }: SetupScreenProps) {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <Card className="w-full max-w-md border-border/50 shadow-lg">
-        <CardHeader className="text-center space-y-2 pb-2">
-          <button
-            onClick={onBack}
-            className="absolute left-6 top-6 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <div className="text-3xl">🌱</div>
-          <CardTitle className="text-2xl font-semibold tracking-tight">Create New Plan</CardTitle>
-          <p className="text-muted-foreground text-sm">Break it down. One step at a time.</p>
-        </CardHeader>
-        <CardContent>
+      <div className="w-full max-w-md space-y-4">
+        <BackButton onClick={onBack} label="Back to plans" />
+        <Card className="border-border/50 shadow-lg">
+          <CardHeader className="text-center space-y-2 pb-2">
+            <div className="text-3xl">🌱</div>
+            <CardTitle className="text-2xl font-semibold tracking-tight">Create New Plan</CardTitle>
+            <p className="text-muted-foreground text-sm">Break it down. One step at a time.</p>
+          </CardHeader>
+          <CardContent>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="goal">What are you working on?</Label>

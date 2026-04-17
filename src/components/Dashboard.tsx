@@ -3,7 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { PlanData } from "@/lib/planner";
 import { getDaysLeft, getRemainingUnits, getTodayTarget } from "@/lib/planner";
-import { Clock, Target, Layers, CalendarDays, ArrowLeft } from "lucide-react";
+import { Clock, Target, Layers, CalendarDays } from "lucide-react";
+import BackButton from "@/components/BackButton";
 
 interface DashboardProps {
   plan: PlanData;
@@ -24,13 +25,7 @@ export default function Dashboard({ plan, onStartFocus, onOverwhelm, onReset, on
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
       <div className="w-full max-w-md space-y-6">
         {/* Back button */}
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          All plans
-        </button>
+        <BackButton onClick={onBack} label="Back to plans" />
 
         {/* Header */}
         <div className="text-center space-y-1">
